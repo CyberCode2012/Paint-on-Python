@@ -99,3 +99,4 @@ if __name__ == "__main__":
     root = tk.Tk()
     app = PaintApp(root)
     root.mainloop()
+# TY for watching my project :)
