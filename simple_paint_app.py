@@ -1,5 +1,7 @@
 import tkinter as tk
-from tkinter import colorchooser
+from tkinter import colorchooser, filedialog  # Don't forget to import filedialog
+from PIL import ImageGrab
+
 
 class PaintApp:
     def __init__(self, root):
@@ -52,6 +54,9 @@ class PaintApp:
         self.draw_button = tk.Button(root, text="Draw", command=self.use_draw)
         self.draw_button.grid(row=4, column=3, sticky="ew")
 
+        self.save_button = tk.Button(root, text="Save", command=self.save_canvas)
+        self.save_button.grid(row=4, column=4, sticky="ew")
+
     def start_draw(self, event):
         self.last_x = event.x
         self.last_y = event.y
@@ -95,8 +100,18 @@ class PaintApp:
     def change_shape(self, selected_shape):
         self.shape = selected_shape
 
+    def save_canvas(self):
+        file_path = filedialog.asksaveasfilename(defaultextension=".png", filetypes=[("PNG files", "*.png")])
+        if file_path:
+            x = self.root.winfo_rootx() + self.canvas.winfo_x()
+            y = self.root.winfo_rooty() + self.canvas.winfo_y()
+            x1 = x + self.canvas.winfo_width()
+            y1 = y + self.canvas.winfo_height()
+            ImageGrab.grab().crop((x, y, x1, y1)).save(file_path, "PNG")
+
 if __name__ == "__main__":
     root = tk.Tk()
     app = PaintApp(root)
     root.mainloop()
 # TY for watching my project :)
+# Made by CyberCode2012
