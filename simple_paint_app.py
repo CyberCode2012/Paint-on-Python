@@ -1,6 +1,6 @@
 import tkinter as tk
 from tkinter import colorchooser, filedialog  # Don't forget to import filedialog
-from PIL import ImageGrab
+from PIL import ImageGrab, Image, ImageTk
 
 
 class PaintApp:
@@ -8,7 +8,7 @@ class PaintApp:
         self.root = root
         self.root.title("BrushMagic: Your Digital Canvas")
 
-        self.canvas = tk.Canvas(root, bg="white", width=800, height=600)
+        self.canvas = tk.Canvas(root, bg="white", width=800, height=600, highlightthickness=0)
         self.canvas.grid(row=0, column=0, columnspan=4, rowspan=3, sticky="nsew")
 
         self.brush_size = 2
@@ -42,20 +42,23 @@ class PaintApp:
         self.shape_menu = tk.OptionMenu(self.bottom_frame, self.shape_var, "Line", "Rectangle", "Oval", command=self.change_shape)
         self.shape_menu.pack(side=tk.LEFT)
 
-        self.clear_button = tk.Button(root, text="Clear", command=self.clear_canvas)
-        self.clear_button.grid(row=4, column=0, sticky="ew")
+        self.clear_button = tk.Button(self.bottom_frame, text="Clear", command=self.clear_canvas)
+        self.clear_button.pack(side=tk.LEFT, padx=5)
 
-        self.color_button = tk.Button(root, text="Change Color", command=self.change_color)
-        self.color_button.grid(row=4, column=1, sticky="ew")
+        self.color_button = tk.Button(self.bottom_frame, text="Change Color", command=self.change_color)
+        self.color_button.pack(side=tk.LEFT, padx=5)
 
-        self.eraser_button = tk.Button(root, text="Eraser", command=self.use_eraser)
-        self.eraser_button.grid(row=4, column=2, sticky="ew")
+        self.eraser_button = tk.Button(self.bottom_frame, text="Eraser", command=self.use_eraser)
+        self.eraser_button.pack(side=tk.LEFT, padx=5)
 
-        self.draw_button = tk.Button(root, text="Draw", command=self.use_draw)
-        self.draw_button.grid(row=4, column=3, sticky="ew")
+        self.draw_button = tk.Button(self.bottom_frame, text="Draw", command=self.use_draw)
+        self.draw_button.pack(side=tk.LEFT, padx=5)
 
-        self.save_button = tk.Button(root, text="Save", command=self.save_canvas)
-        self.save_button.grid(row=4, column=4, sticky="ew")
+        self.save_button = tk.Button(self.bottom_frame, text="Save", command=self.save_canvas)
+        self.save_button.pack(side=tk.LEFT, padx=5)
+
+        self.load_button = tk.Button(self.bottom_frame, text="Load", command=self.load_image)
+        self.load_button.pack(side=tk.LEFT, padx=5)
 
     def start_draw(self, event):
         self.last_x = event.x
@@ -108,6 +111,15 @@ class PaintApp:
             x1 = x + self.canvas.winfo_width()
             y1 = y + self.canvas.winfo_height()
             ImageGrab.grab().crop((x, y, x1, y1)).save(file_path, "PNG")
+    
+    def load_image(self):
+        file_path = filedialog.askopenfilename(filetypes=[("Image files", "*.png;*.jpg;*.jpeg;*.bmp;*.gif")])
+        if file_path:
+            image = Image.open(file_path)
+            # Resize the image to fit the canvas (optional)
+            image = image.resize((800, 600), Image.ANTIALIAS)
+            self.image_tk = ImageTk.PhotoImage(image)
+            self.canvas.create_image(0, 0, anchor=tk.NW, image=self.image_tk)
 
 if __name__ == "__main__":
     root = tk.Tk()
