@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import colorchooser, filedialog  # Don't forget to import filedialog
+from tkinter import colorchooser, filedialog
 from PIL import ImageGrab, Image, ImageTk
 
 
